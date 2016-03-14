@@ -23,7 +23,14 @@ public class Cubesurfaceview extends GLSurfaceView implements SensorEventListene
 
 	private Cuberenderer renderer;
 
-	public Cubesurfaceview(Context context, SensorManager sensorManager, Sensor rotationSensor) {
+    private Float baseAzimuth;
+    private Float basePitch;
+    private Float baseRoll;
+
+    private float yrot;
+    private float xrot;
+
+    public Cubesurfaceview(Context context, SensorManager sensorManager, Sensor rotationSensor) {
 		super(context);
         this.sensorManager = sensorManager;
         this.rotationSensor = rotationSensor;
@@ -54,8 +61,31 @@ public class Cubesurfaceview extends GLSurfaceView implements SensorEventListene
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-		SensorManager.getQuaternionFromVector(rMat, event.values);
-        Log.d("LOG", "onSensorChanged: " + event.values[0] + " " + event.values[1] + " " + event.values[2] );
+        float azimuth = event.values[0];
+        float pitch = event.values[1];
+        float roll = event.values[2];
+
+        if ( null == baseAzimuth ) {
+            baseAzimuth = azimuth;
+        }
+        if ( null == basePitch ) {
+            basePitch = pitch;
+        }
+        if ( null == baseRoll ) {
+            baseRoll = roll;
+        }
+
+        float pitchDifference = pitch - basePitch;
+        float rollDifference = roll - baseRoll;
+
+        yrot -= rollDifference;
+        xrot -= pitchDifference;
+
+        renderer.xAngle = xrot*100;
+        renderer.yAngle = yrot*100;
+
+        baseRoll = roll;
+        basePitch = pitch;
     }
 
 	@Override
