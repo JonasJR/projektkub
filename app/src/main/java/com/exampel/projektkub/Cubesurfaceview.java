@@ -23,13 +23,12 @@ public class Cubesurfaceview extends GLSurfaceView implements SensorEventListene
 
 	private Cuberenderer renderer;
 
-	public Cubesurfaceview(Context context) {
+	public Cubesurfaceview(Context context, SensorManager sensorManager, Sensor rotationSensor) {
 		super(context);
+        this.sensorManager = sensorManager;
+        this.rotationSensor = rotationSensor;
 		setEGLContextClientVersion(2);
         setRenderer(renderer = new Cuberenderer(this));
-
-		sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-		rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
 	}
 
 	/*
@@ -56,7 +55,8 @@ public class Cubesurfaceview extends GLSurfaceView implements SensorEventListene
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		SensorManager.getQuaternionFromVector(rMat, event.values);
-	}
+        Log.d("LOG", "onSensorChanged: " + event.values[0] + " " + event.values[1] + " " + event.values[2] );
+    }
 
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
