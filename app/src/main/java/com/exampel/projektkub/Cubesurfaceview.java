@@ -63,7 +63,7 @@ public class Cubesurfaceview extends GLSurfaceView implements SensorEventListene
 	public void onSensorChanged(SensorEvent event) {
         float azimuth = event.values[0];
         float pitch = event.values[1];
-        float roll = event.values[2];
+        float roll = event.values[0];
 
         if ( null == baseAzimuth ) {
             baseAzimuth = azimuth;
@@ -78,8 +78,8 @@ public class Cubesurfaceview extends GLSurfaceView implements SensorEventListene
         float pitchDifference = pitch - basePitch;
         float rollDifference = roll - baseRoll;
 
-        yrot -= rollDifference;
-        xrot -= pitchDifference;
+        xrot -= rollDifference;
+        yrot -= pitchDifference;
 
         renderer.xAngle = xrot*100;
         renderer.yAngle = yrot*100;
